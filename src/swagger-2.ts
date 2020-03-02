@@ -28,7 +28,7 @@ export interface Property {
 export interface Swagger2 {
   swagger?: string;
   openapi?: string;
-  definitions: {
+  components: {
     [index: string]: Swagger2Definition;
   };
 }
@@ -72,11 +72,11 @@ function parse(spec: Swagger2, options: Swagger2Options = {}): string {
     output.push(`${wrapper} {`);
   }
 
-  const { definitions } = spec;
+  const { components: components } = spec;
 
   function getRef(lookup: string): [string, Swagger2Definition] {
-    const ID = lookup.replace('#/definitions/', '');
-    const ref = definitions[ID];
+    const ID = lookup.replace('#/components/', '');
+    const ref = components[ID];
     return [ID, ref];
   }
 
@@ -232,7 +232,7 @@ function parse(spec: Swagger2, options: Swagger2Options = {}): string {
   }
 
   // Begin parsing top-level entries
-  Object.entries(definitions).forEach((entry): void => {
+  Object.entries(components).forEach((entry): void => {
     const value = entry[1];
     // start with objects only
     const isObject = value.type === 'object';
